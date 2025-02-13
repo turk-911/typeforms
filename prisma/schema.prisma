@@ -14,27 +14,30 @@ datasource db {
 }
 
 model Form {
-  id String @id @default(uuid())
-  title String
+  id          String     @id @default(uuid())
+  title       String
   description String?
-  fields Json
-  userId String
-  responses Response[]
-  createdAt DateTime @default(now())
-  User User @relation(fields: [userId], references: [id])
+  fields      Json
+  userId      String
+  responses   Response[]
+  createdAt   DateTime   @default(now())
+  User        User       @relation(fields: [userId], references: [id])
 }
 
 model Response {
-  id String @id @default(uuid())
-  formId String
-  form Form @relation(fields: [formId], references: [id])
-  answers Json
+  id          String   @id @default(uuid())
+  formId      String
+  form        Form     @relation(fields: [formId], references: [id])
+  answers     Json
   submittedAt DateTime @default(now())
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  password String
-  forms    Form[]
+  id                String  @id @default(uuid())
+  email             String  @unique
+  password          String
+  isVerified        Boolean @default(false)
+  verificationToken String?
+  forms             Form[]
+  resetToken        String?
 }
