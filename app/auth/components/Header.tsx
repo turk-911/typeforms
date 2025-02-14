@@ -5,13 +5,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
-const navItems = [
-  { name: "Features", href: "#features" },
-  { name: "How It Works", href: "#how-it-works" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "Testimonials", href: "#testimonials" },
-];
-
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter(); // Initialize Next.js router
@@ -27,7 +20,7 @@ export default function Header() {
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">FormBuilder</span>
-            <img className="h-8 w-auto" src="logo.png" alt="FormBuilder Logo" />
+            <img className="h-8 w-auto" src="/placeholder.svg?height=32&width=32" alt="FormBuilder Logo" />
           </a>
         </div>
 
@@ -44,23 +37,11 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex lg:gap-x-12">
-          {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-sm font-semibold leading-6 text-white hover:text-gray-300 transition-colors"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
+       
 
         {/* CTA Button */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Button className="bg-white text-black hover:bg-gray-200" onClick={handleGetStarted}>
-            Get Started
-          </Button>
+         
         </div>
       </nav>
 
@@ -74,8 +55,8 @@ export default function Header() {
       >
         <div className="flex items-center justify-between">
           <a href="#" className="-m-1.5 p-1.5">
-            <span className="sr-only">FormBuilder</span>
-            <img className="h-8 w-auto" src="/placeholder.svg?height=32&width=32" alt="FormBuilder Logo" />
+            <span className="sr-only text-white">FormBuilder</span>
+            <img className="h-8 w-auto" src="logo.png" alt="FormBuilder Logo" />
           </a>
           <button
             type="button"
@@ -89,24 +70,10 @@ export default function Header() {
 
         {/* Mobile Menu Items */}
         <div className="mt-6">
-          <nav className="space-y-4">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="block text-lg font-semibold text-white hover:text-indigo-400 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </a>
-            ))}
-          </nav>
 
           {/* CTA Button */}
           <div className="mt-6">
-            <Button className="w-full bg-white text-black hover:bg-gray-200" onClick={handleGetStarted}>
-              Get Started
-            </Button>
+          
           </div>
         </div>
       </div>

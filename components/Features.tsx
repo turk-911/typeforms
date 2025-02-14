@@ -1,4 +1,4 @@
-import { Layers, Palette, BarChart3, Webhook } from "lucide-react"
+import { Layers, Palette, BarChart3, Webhook } from "lucide-react";
 
 const features = [
   {
@@ -21,29 +21,31 @@ const features = [
     title: "API & Webhooks for Developers",
     description: "Integrate seamlessly with your existing tools using our robust API and webhooks.",
   },
-]
+];
 
 export default function Features() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-transparent">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        {/* Section Title */}
+        <h2 className="text-3xl font-bold text-center text-white mb-12">
           Powerful Features for Seamless Form Creation
         </h2>
+
+        {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-gray-50 rounded-lg p-6 shadow-md transition-all duration-300 hover:shadow-lg"
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-6 shadow-md transition-all duration-300 hover:shadow-indigo-500/50"
             >
-              <feature.icon className="w-12 h-12 text-indigo-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <feature.icon className="w-12 h-12 text-indigo-400 mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+              <p className="text-gray-300">{feature.description}</p>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
-

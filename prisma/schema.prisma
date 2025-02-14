@@ -40,4 +40,5 @@ model User {
   verificationToken String?
   forms             Form[]
   resetToken        String?
+  name              String @default("Santa Claus")
 }

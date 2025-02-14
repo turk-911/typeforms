@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const { email, name, password } = await req.json();
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json({ error: "User already exists" }, { status: 400 });
@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     await prisma.user.create({
       data: {
         email,
+        name,
         password: hashedPassword,
         verificationToken,
       },
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Verify your email",
-      html: `<p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`,
+      html: `<p>Hi, ${name}, <br/>Click <a href="${verificationLink}">here</a> to verify your email.</p>`,
     });
 
     console.log("Mail sent successfully to:", email);
