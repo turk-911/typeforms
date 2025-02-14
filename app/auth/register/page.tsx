@@ -1,16 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import Header from "../components/Header";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
+
+  useEffect(() => {
+      const checkAuth = async () => {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if(data.isAuthenticated) {
+          router.push("/dashboard");
+        }
+        else {
+          setLoading(false);
+        }
+      }
+      checkAuth();
+    }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +45,9 @@ export default function Register() {
       setMessage(data.error || "❌ Signup failed");
     }
   };
-
+  if(loading) {
+    return <p className="text-white text-center">Checking authentication of this device</p>
+  }
   return (
     <div className="h-screen flex items-center justify-center relative w-full bg-black">
       <Header />

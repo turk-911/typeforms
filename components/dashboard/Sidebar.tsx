@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { LayoutDashboard, FileText, BarChart2, Users, Settings, LogOut, Menu } from "lucide-react"
 
@@ -16,7 +16,15 @@ const menuItems = [
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", {
+        method: "POST"
+    });
+    router.push("/");
+  }
 
   return (
     <div
@@ -47,7 +55,7 @@ export default function Sidebar() {
           </ul>
         </nav>
         <div className="p-4">
-          <Button variant="ghost" className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50">
+          <Button variant="ghost" className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50" onClick={handleLogout}>
             <LogOut className={`h-5 w-5 ${isCollapsed ? "mr-0" : "mr-3"}`} />
             {!isCollapsed && <span>Logout</span>}
           </Button>

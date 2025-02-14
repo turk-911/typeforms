@@ -1,40 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; 
 import Link from "next/link";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import Header from "../components/Header";
 
 export default function Login() {
+  const router = useRouter(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  const [loading, setLoading] = useState(true); 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const res = await fetch("/api/auth/me");
+      const data = await res.json();
+      if(data.isAuthenticated) {
+        router.push("/dashboard");
+      }
+      else {
+        setLoading(false);
+      }
+    }
+    checkAuth();
+  }, [router]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      setMessage("✅ Login successful! Redirecting... 🚀");
-      // Redirect user after successful login (Modify based on your app's logic)
-      setTimeout(() => {
-        window.location.href = "/dashboard"; // Change "/dashboard" to your actual route
-      }, 2000);
-    } else {
-      setMessage(data.error || "❌ Login failed");
+  
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const text = await res.text(); // Read the response as text first
+      let data;
+      
+      if (text) {
+        try {
+          data = JSON.parse(text); // Parse only if there is a response body
+        } catch (err) {
+          console.error("Invalid JSON:", text);
+          setMessage("❌ Server returned invalid JSON.");
+          return;
+        }
+      } else {
+        data = {}; // Set to an empty object if no body
+      }
+  
+      if (res.ok) {
+        setMessage("✅ Login successful! Redirecting... 🚀");
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2000);
+      } else {
+        setMessage(data.error || "❌ Login failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setMessage("❌ Something went wrong. Please try again.");
     }
   };
-
+  if(loading) {
+    return <p className="text-center text-white">Checking authentication of this device</p>
+  }
   return (
     <div className="h-screen flex items-center justify-center relative w-full bg-black">
-        <Header />
+      <Header />
       {/* Starry Background */}
       <div className="absolute inset-0">
         <ShootingStars />
