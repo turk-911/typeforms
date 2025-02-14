@@ -22,6 +22,7 @@ model Form {
   responses   Response[]
   createdAt   DateTime   @default(now())
   User        User       @relation(fields: [userId], references: [id])
+  questions   Question[]
 }
 
 model Response {
@@ -40,5 +41,16 @@ model User {
   verificationToken String?
   forms             Form[]
   resetToken        String?
-  name              String @default("Santa Claus")
+  name              String  @default("Santa Claus")
+}
+
+model Question {
+  id       String   @id @default(uuid())
+  formId   String
+  form     Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  type     String
+  text     String
+  options  Boolean?
+  required Boolean  @default(false)
+  order    Int
 }
