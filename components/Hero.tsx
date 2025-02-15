@@ -4,8 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export default function Hero() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    const token = Cookies.get("auth_token");
+    console.log("Token", token);
+    setIsAuthenticated(!!token);
+  }, []);
+  const handleButtonClick = () => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    } else {
+      router.push("/auth/register");
+    }
+  };
   return (
     <section className="relative h-screen flex flex-col items-center justify-center text-center bg-black">
       {/* Starry Background */}
@@ -24,16 +41,18 @@ export default function Hero() {
           </span>
         </h1>
         <p className="text-xl text-gray-300 mb-8">
-          Effortlessly build and integrate smart forms into your projects—no coding required.
+          Effortlessly build and integrate smart forms into your projects—no
+          coding required.
         </p>
 
         {/* CTA Buttons */}
         <div className="flex justify-center gap-4">
           <Button
             size="lg"
+            onClick={handleButtonClick}
             className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-purple-500/50"
           >
-            Get Started
+            Continue to dashboard
           </Button>
           <Button
             size="lg"
@@ -59,9 +78,15 @@ export default function Hero() {
       {/* Floating Animation */}
       <style jsx>{`
         @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-          100% { transform: translateY(0px); }
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-8px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
         }
 
         .animate-float {

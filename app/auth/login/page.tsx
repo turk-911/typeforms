@@ -1,45 +1,45 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import Header from "../components/Header";
 
 export default function Login() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const checkAuth = async () => {
       const res = await fetch("/api/auth/me");
       const data = await res.json();
-      if(data.isAuthenticated) {
+      if (data.isAuthenticated) {
         router.push("/dashboard");
-      }
-      else {
+      } else {
         setLoading(false);
       }
-    }
+    };
     checkAuth();
   }, [router]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
-  
+
     try {
       const res = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
-  
+
       const text = await res.text(); // Read the response as text first
       let data;
-      
+
       if (text) {
         try {
           data = JSON.parse(text); // Parse only if there is a response body
@@ -51,7 +51,7 @@ export default function Login() {
       } else {
         data = {}; // Set to an empty object if no body
       }
-  
+
       if (res.ok) {
         setMessage("✅ Login successful! Redirecting... 🚀");
         setTimeout(() => {
@@ -65,8 +65,12 @@ export default function Login() {
       setMessage("❌ Something went wrong. Please try again.");
     }
   };
-  if(loading) {
-    return <p className="text-center text-white">Checking authentication of this device</p>
+  if (loading) {
+    return (
+      <p className="text-center text-white">
+        Checking authentication of this device
+      </p>
+    );
   }
   return (
     <div className="h-screen flex items-center justify-center relative w-full bg-black">
@@ -129,9 +133,15 @@ export default function Login() {
 
       <style jsx>{`
         @keyframes glow {
-          0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
-          50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-          100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+          0% {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+          }
+          50% {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+          }
+          100% {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+          }
         }
 
         .animate-glow {
