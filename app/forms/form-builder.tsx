@@ -112,7 +112,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
         onChange={(e) =>
           setFormData((prev) => ({ ...prev, title: e.target.value }))
         }
-        className="text-2xl font-bold mb-4"
+        className="text-2xl font-bold mb-4 text-white"
       />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="questions">
@@ -128,11 +128,11 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      className="mb-4 p-4 border rounded-lg"
+                      className="mb-4 p-4 border border-white/60 rounded-lg"
                     >
                       <div className="flex items-center mb-2">
                         <div {...provided.dragHandleProps} className="mr-2">
-                          <GripVertical className="text-gray-400" />
+                          <GripVertical className="text-white" />
                         </div>
                         <Input
                           value={question.question}
@@ -142,7 +142,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                             })
                           }
                           placeholder="Enter your question"
-                          className="flex-grow"
+                          className="flex-grow text-white"
                         />
                       </div>
                       {(question.type === "singleChoice" ||
@@ -179,7 +179,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                       <div className="flex items-center mt-2">
                         <Label
                           htmlFor={`required-${question.id}`}
-                          className="mr-2"
+                          className="mr-2 text-white"
                         >
                           Required
                         </Label>
@@ -201,12 +201,12 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
         </Droppable>
       </DragDropContext>
       <div className="mt-4">
-        <Label>Add Question</Label>
+        <Label className="text-white">Add Question</Label>
         <Select onValueChange={(value: QuestionType) => addQuestion(value)}>
-          <SelectTrigger>
+          <SelectTrigger className="text-white">
             <SelectValue placeholder="Select question type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="">
             <SelectItem value="singleChoice">Single Choice</SelectItem>
             <SelectItem value="multipleChoice">Multiple Choice</SelectItem>
             <SelectItem value="shortAnswer">Short Answer</SelectItem>
@@ -215,8 +215,8 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           </SelectContent>
         </Select>
       </div>
-      <Button className="mt-4" onClick={() => onSave(formData)}>
-        Save Form
+      <Button className="mt-4 bg-white text-black" onClick={() => onSave(formData)}>
+        Preview Form
       </Button>
     </div>
   );

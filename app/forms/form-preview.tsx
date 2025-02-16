@@ -109,7 +109,7 @@ const FormPreview: React.FC<FormPreviewProps> = ({ formData }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">{formData.title}</h1>
+      <h1 className="text-3xl font-bold mb-6 text-white">{formData.title}</h1>
       {formData.questions.map((question) => (
         <div key={question.id} className="mb-6">
           <Label className="mb-2 block">
@@ -119,7 +119,7 @@ const FormPreview: React.FC<FormPreviewProps> = ({ formData }) => {
           {renderQuestion(question)}
         </div>
       ))}
-      <Button onClick={() => console.log(responses)}>Submit</Button>
+      <Button onClick={() => console.log(responses)}>Save Form</Button>
     </div>
   );
 };
