@@ -1,8 +1,7 @@
 "use client";
 
-import type React from "react";
-import { useState, useCallback } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useState, useCallback } from "react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,10 +45,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
   onSave,
 }) => {
   const [formData, setFormData] = useState<FormData>(
-    initialFormData || {
-      title: "Untitled Form",
-      questions: [],
-    }
+    initialFormData || { title: "Untitled Form", questions: [] }
   );
 
   const addQuestion = (type: QuestionType) => {
@@ -57,7 +53,9 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
       id: Date.now().toString(),
       type,
       question: "",
-      options: ["Option 1"],
+      options: ["singleChoice", "multipleChoice", "dropdown"].includes(type)
+        ? ["Option 1"]
+        : undefined,
       required: false,
     };
     setFormData((prev) => ({
@@ -92,18 +90,16 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     }));
   };
 
-  const onDragEnd = useCallback(
-    (result: any) => {
-      if (!result.destination) return;
+  const onDragEnd = useCallback((result: any) => {
+    if (!result.destination) return;
 
-      const newQuestions = Array.from(formData.questions);
-      const [reorderedItem] = newQuestions.splice(result.source.index, 1);
-      newQuestions.splice(result.destination.index, 0, reorderedItem);
-
-      setFormData((prev) => ({ ...prev, questions: newQuestions }));
-    },
-    [formData.questions]
-  );
+    setFormData((prev) => {
+      const newQuestions = Array.from(prev.questions);
+      const [movedItem] = newQuestions.splice(result.source.index, 1);
+      newQuestions.splice(result.destination.index, 0, movedItem);
+      return { ...prev, questions: newQuestions };
+    });
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
@@ -114,6 +110,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
         }
         className="text-2xl font-bold mb-4 text-white"
       />
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="questions">
           {(provided) => (
@@ -130,8 +127,12 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                       {...provided.draggableProps}
                       className="mb-4 p-4 border border-white/60 rounded-lg"
                     >
+                      {/* ✅ Properly Wrapped Drag Handle */}
                       <div className="flex items-center mb-2">
-                        <div {...provided.dragHandleProps} className="mr-2">
+                        <div
+                          {...provided.dragHandleProps}
+                          className="cursor-grab mr-2"
+                        >
                           <GripVertical className="text-white" />
                         </div>
                         <Input
@@ -145,6 +146,8 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                           className="flex-grow text-white"
                         />
                       </div>
+
+                      {/* ✅ Handle Multiple Choice Options */}
                       {(question.type === "singleChoice" ||
                         question.type === "multipleChoice" ||
                         question.type === "dropdown") && (
@@ -176,6 +179,8 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                           </Button>
                         </div>
                       )}
+
+                      {/* ✅ Required Toggle */}
                       <div className="flex items-center mt-2">
                         <Label
                           htmlFor={`required-${question.id}`}
@@ -200,13 +205,14 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           )}
         </Droppable>
       </DragDropContext>
+
       <div className="mt-4">
         <Label className="text-white">Add Question</Label>
         <Select onValueChange={(value: QuestionType) => addQuestion(value)}>
-          <SelectTrigger className="text-white">
+          <SelectTrigger className="text-white border border-white/60">
             <SelectValue placeholder="Select question type" />
           </SelectTrigger>
-          <SelectContent className="">
+          <SelectContent>
             <SelectItem value="singleChoice">Single Choice</SelectItem>
             <SelectItem value="multipleChoice">Multiple Choice</SelectItem>
             <SelectItem value="shortAnswer">Short Answer</SelectItem>
@@ -215,7 +221,11 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           </SelectContent>
         </Select>
       </div>
-      <Button className="mt-4 bg-white text-black" onClick={() => onSave(formData)}>
+
+      <Button
+        className="mt-4 bg-white text-black"
+        onClick={() => onSave(formData)}
+      >
         Preview Form
       </Button>
     </div>
